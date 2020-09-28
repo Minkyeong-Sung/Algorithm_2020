@@ -1,69 +1,78 @@
 #include <iostream>
+#include <algorithm>
 #include <string>
-#include <cstdio>
-#include <cmath>
 
 using namespace std;
 
+bool remocon[11];
 
-// F = G*m1*m2/(d*d), G는 양의 상수 값
-int main(){
-    int test_case;
-    int T, N;
-    double result = 0;
-    cin>>T;
-    for(test_case = 1; test_case <= T; ++test_case)
-    {
-        cin >> N;
-        double x[N], m[N];
-
-        // input x-position
-        for(int i=0; i<N; i++){
-            cin >> x[i];
+int isPossible(int n){
+    
+    
+    if(n==0){
+        // 고장난 번호라면 0을 리턴
+        if(remocon[n]){
+            return 0;
         }
-        // input x-weight
-        for(int i=0; i<N; i++){
-            cin >> m[i];
+        else{
+            return 1;
         }
-        // 이분 탐색
-        cout.precision(10);
-        cout <<"#" << test_case ;
-
-        double left, right;
-        for(int i=0; i< N-1; i++){
-            
-            left = x[i];
-            right = x[i+1];
-            double result = 0;
-            
-            for(int j= 0; j<50; j++){
-                double sum = 0;
-                double mid = (left + right)/2.0;
-                
-                // F = G*m1*m2/(d*d), G는 양의 상수 값
-                // left
-                for(int k=0; k<= i; k++){
-                    sum += (m[k] / ((mid - x[k])*(mid - x[k])));
-                }
-                for(int k = i+1; k<N; k++){
-                    sum -= ( m[k] / ((mid - x[k])* (mid - x[k])));
-                }
-                
-                if(sum > 0){
-                    // 오른쪽 값이 더 크기때문에, 왼쪽기준을 오른쪽으로 옮겨준다.
-                    left = mid;
-                }
-                else{
-                    // 0 이 되면 균형점 ,
-                    right = mid;
-                    result = mid;
-                }
-            }
-            // 소수점 아래 10자리까지 출력.
-            printf(" %.10lf", result);
-        }
-        cout <<'\n';
-            
     }
+    
+    int len = 0;
+    
+    while(n > 0){
+        
+        if(remocon[n%10]) {
+            return 0;
+        }
+        n /= 10;
+        len +=1;
+    }
+    
+    return len;
+}
+
+int main(){
+    
+    int n, m, x;
+    int ans = 0;
+    
+    cin >> n >> m ;
+    
+    for(int i=0; i<m; i++){
+        cin >> x;
+        remocon[x] = true;
+    }
+    
+    // 양수로 설정
+    ans = n - 100;
+    if(ans < 0){
+        ans = -ans;
+    }
+
+    // 리모컨을 눌러볼 수 있는 최대 갯수만큼 탐색한다.
+    for(int i=0; i<= 1000000; i++){
+
+        // check available number
+        // 고장난 리모컨 번호가 몇개 있는지 확인한다.
+        int len = isPossible(i);
+
+        //고장난 번호가 없다면, 이동해야하는 채널 - 현재번호(100) 만큼의 최소 값을 구한다.
+        if(len >0){
+            int press = i - n;
+            
+            if(press<0){
+                press = -press;
+            }
+            
+            if(ans > press + len){
+                ans = press + len;
+            }
+        }
+    }
+    
+    cout << ans;
+    
     return 0;
 }
