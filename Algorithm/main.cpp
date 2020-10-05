@@ -1,77 +1,77 @@
 #include <iostream>
-#include <algorithm>
-#include <cstdio>
-#include <vector>
 #include <string>
+#include <algorithm>
+#include <vector>
 
 using namespace std;
 
-char ch[11];
-vector<int> minNum, maxNum;
-int k;
-
-bool isPossible(vector<int> numbers){
-
-    // 부등호 갯수만큼 확인
-    for(int i=0; i<k; i++){
-        
-        // 조건에 맞지 않는 경우를 false 로 반환한다.
-        if(ch[i] == '>' && numbers[i] < numbers[i+1]){
-            return false;
-        }
-        
-        if(ch[i] == '<' && numbers[i] > numbers[i+1]){
-            return false;
-        }
+int alpha[26] ;
+int calculation(vector<string> &vt, vector<char> &letter, vector<int> &mapping){
+    
+    int m = letter.size();
+    int sum = 0;
+    
+    for(int i=0; i< m; i++ ){
+        alpha[ letter[i] - 65]  = mapping[i];
     }
     
-    return true;
+    for(string s : vt){
+        
+        int now=0;
+        for(char x : s){
+            now = now * 10 +  alpha[x-65] ;
+        }
+        
+        sum += now;
+    }
+    
+    return sum;
 }
 
 int main(){
-    ios_base::sync_with_stdio(false);
-    cin.tie(NULL); cout.tie(NULL);
     
-    cin >> k;
+    int n;
+    cin >> n;
     
-    for(int t=0; t<k; t++){
-        cin >> ch[t];
-    }
+    vector<string> vt(n);
+    vector<char> letter;
     
-    for(int i=0; i<=k; i++){
-        minNum.push_back(i);
-        maxNum.push_back(9-i);
-    }
-    
-    // 최대를 찾는 경우
-    /*
-     9~0 순번으로 저장 된 수들을 이전 순열(내림차순)*을 통해 하나씩 이동하면서 바꾼다.
-     */
-    do {
-        if(isPossible(maxNum)){
-            break;
+    for(int i=0; i<n; i++){
+        cin >> vt[i];
+        
+        for(char x : vt[i]){
+            letter.push_back(x);
         }
-    } while (prev_permutation(maxNum.begin(), maxNum.end()));
+    }
     
+    sort(letter.begin(), letter.end());
+    letter.erase( unique(letter.begin(), letter.end()), letter.end());
     
-    // 최소를 찾는 경우
-    /*
-     0~ 9 순번으로 저장 된 수들을 다음 순열(오름차순)을 통해 하나씩 이동하면서 바꾼다.
-     */
+    int m = letter.size();
+    vector<int> mapping;
+    
+    // 몇개의 숫자까지 돌아볼지 확인할 것
+    for(int i=9; i> 9-m; i--){
+        mapping.push_back(i);
+    }
+    
+    // 다음 순열 사용을 위해 정렬 한다.
+    sort(mapping.begin(), mapping.end());
+    
+    int answer = 0;
+    
     do {
-        if( isPossible(minNum)){
-            break;
+        //
+        int tmp = calculation(vt, letter, mapping);
+        
+        if(answer < tmp){
+            answer = tmp;
         }
-    } while (  next_permutation( minNum.begin(), minNum.end()));
+        
+    } while ( next_permutation(mapping.begin(), mapping.end()));
+    
+    cout << answer;
     
     
-    for(int i=0; i<= k; i++){
-        cout << maxNum[i];
-    }
-    cout <<'\n';
-    
-    for(int i=0; i<=k; i++){
-        cout << minNum[i];
-    }
     return 0;
 }
