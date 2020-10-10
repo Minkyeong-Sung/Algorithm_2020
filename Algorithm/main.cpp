@@ -1,71 +1,54 @@
 #include <iostream>
 #include <algorithm>
 #include <vector>
-#include <cstring>
-#include <cmath>
+#include <utility>
 
 using namespace std;
 
 /*
- [코딜리티] Task 6. MaxProductOfThree
- 
- A non-empty array A consisting of N integers is given. The product of triplet (P, Q, R) equates to A[P] * A[Q] * A[R] (0 ≤ P < Q < R < N).
-
- For example, array A such that:
-
-   A[0] = -3
-   A[1] = 1
-   A[2] = 2
-   A[3] = -2
-   A[4] = 5
-   A[5] = 6
- contains the following example triplets:
-
- (0, 1, 2), product is −3 * 1 * 2 = −6
- (1, 2, 4), product is 1 * 2 * 5 = 10
- (2, 4, 5), product is 2 * 5 * 6 = 60
- Your goal is to find the maximal product of any triplet.
-
- Write a function:
-
- int solution(vector<int> &A);
-
- that, given a non-empty array A, returns the value of the maximal product of any triplet.
-
- For example, given array A such that:
-
-   A[0] = -3
-   A[1] = 1
-   A[2] = 2
-   A[3] = -2
-   A[4] = 5
-   A[5] = 6
- the function should return 60, as the product of triplet (2, 4, 5) is maximal.
-
- Write an efficient algorithm for the following assumptions:
-
- N is an integer within the range [3..100,000];
- each element of array A is an integer within the range [−1,000..1,000].
- 
+ [코딜리티] Task 6. NumberOfDiscIntersections - 93% (overflow)
  
  */
+bool comp(const pair<int, int>& v1, const pair<int, int>& v2){
+    return (v1.first < v2.first);
+}
 
 int solution(vector<int> &A) {
     int ans = 0;
-    
-    sort(A.begin(), A.end());
     int size = (int)A.size();
+    vector<pair<int, int>> vt; // first : 왼쪽  , second : 오른쪽
     
-    int result1 = A[0] * A[1] * A[size-1];
-    int result2 = A[size-1] * A[size-2] * A[size-3];
-    
-    if(result1 > result2 ){
-        ans = result1;
+    // input
+    for(int i=0; i<size; i++){
+        vt.push_back({i-A[i], i+A[i]});
     }
-    else{
-        ans = result2;
+    
+    // 왼쪽을 기준으로 정렬 후, 중복되는 원들을 카운트 시작한다.
+    sort(vt.begin(), vt.end(), comp);
+    //sort(A.begin(), A.end());
+    
+    // i 범위 : size - 1  => 가장 마지막 원은 카운트 대상이 아니기 때문 ( 이미 중복되는 거라면 앞선 idx에서 포함되기 떄문에
+    for(int i=0; i< size-1 ; i++){
+        // i 다음에 있는 원들이 포함되어 있는지 확인한다.
+        for(int j=i+1; j<size; j++){
+            
+            // 예외처리 1
+            if(ans > 10000000){
+                return -1;
+            }
+
+            // 비교.right < 지금기준원.left 인경우 포함되지 않는 경우로 종료
+            if(vt[i].second < vt[j].first){
+                break;
+            }
+
+            if(vt[i].first <= vt[j].first && vt[i].second >= vt[j].first){
+                ans++;
+            }
+        }
     }
     
     return ans;
 }
+
 
