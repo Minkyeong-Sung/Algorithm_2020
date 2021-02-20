@@ -1,47 +1,47 @@
 #include <string>
 #include <vector>
 #include <queue>
+#include <algorithm>
 
 using namespace std;
 
-// 다리 길이는 bridge_length,  다리는 무게 weight
-int solution(int bridge_length, int weight, vector<int> truck_weights) {
-
-    int time = 0;
-    int sumTruct = 0;
-    int idx = 0;
-    queue<int> q;
+int solution(vector<int> priorities, int location) {
+    int answer = 0;
+    queue<pair<int, int>> q;
+    priority_queue<int> qOrder; // 순서를 비교하기 위해 선언
     
-    while(1){
-        // 시간은 계속 가는 것을 인지
-        time++;
+    // 큐에 정보 입력
+    for(int i=0; i<priorities.size(); i++){
+        q.push(make_pair(i, priorities[i]));
+        qOrder.push(priorities[i]);
+    }
+    
+    
+    while(!q.empty()){
         
-        // 트럭이 다리를 지나가면, 전체 다리에 있는 트럭 무게를 뺴준다.
-        if(q.size() == bridge_length){
-            sumTruct -= q.front();
-            q.pop();
-        }
-        
-        if( truck_weights[idx] +  sumTruct   <= weight ){
+        // 현재 작업 중인 큐의 순번이 우선순위 중 가장 높은지 확인
+        if(q.front().second == qOrder.top()  ){
             
-            // 마지막 트럭까지 삽입하고 나면 종료
-            if(idx == truck_weights.size()-1){
-                // 마지막 트럭이 다리를 통과하는 시간 = 다리길이만큼만 더해주면 된다
-                time += bridge_length;
-                break;
+            if(q.front().first == location){
+                return answer+1;
             }
-            
-            q.push(truck_weights[idx]);
-            sumTruct += truck_weights[idx];
-            idx ++;
+            else{
+                answer++;
+                q.pop();
+                qOrder.pop();
+            }
         }
         else{
-            // 트럭의 무게가 다리무게를 초과한다면, 트럭을 출발점으로 이동한다
-            q.push(0);
+            // 지금 출력해야 하는 순서가 아니라면, 맨 뒤로 이동
+            q.push(q.front());
+            q.pop();
         }
     }
-    return time;
+    
+    
+    return answer;
 }
+
 
 int main(){
     
