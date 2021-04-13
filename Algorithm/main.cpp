@@ -6,44 +6,27 @@ using namespace std;
 
 int main(){
     
-    int s, n , input, pos =0;
-    int i, j;
-    cin >> s >> n;
+    int n, i, j, pos;
+    cin >> n;
     
-    int arr[20];
-    
-    for( i=1; i<=n; i++){
-        cin >> input;
-        
-        // 중단점 찾기
-        pos = -1;
-        for( j=0; j<s; j++){
-            if( arr[j] == input){
-                pos = j;
-            }
-        }
-        
-        // insert
-        if(pos == -1){
-            for(j = s-1; j>=1; j--){
-                arr[j] = arr[j-1];
-            }
-        }
-        // move and insert
-        else{
-            for(j = pos; j>=1; j--){
-                arr[j] = arr[j-1];
-            }
-        }
-        arr[j] = input;
+    vector<int> input(n+1), output(n+1);
+    for( i=1; i<= n; i++){
+        cin >> input[i];
     }
     
-    for(int i=0;i<s; i++){
-        cout << arr[i] << ' ';
+    for( i = n; i> 0 ; i--){
+        pos = i;
+        // input배열의 크기만큼 앞으로 한칸씩 당기기
+        for( j= 1; j<= input[i]; j++){
+            output[pos]= output[pos+1];
+            pos++;
+        }
+        output[pos] = i;
     }
     
-    
-    
+    for(i=1; i<= n; i++){
+        cout << output[i] << ' ' ;
+    }
     
     return 0;
 }
