@@ -4,39 +4,38 @@
 
 using namespace std;
 /*
- 입력으로 양의 정수 N이 입력되면 2개 이상의 연속된 자연수의 합으로 정수 N을 표현하는 방 법의 가짓수를 출력하는 프로그램을 작성하세요.
- 만약 N=15이면
- 7+8=15
- 4+5+6=15
- 1+2+3+4+5=15
- 와 같이 총 3가지의 경우가 존재한다.
-
+ N개의 수를 오름차순으로 정렬한 다음 N개의 수 중 한 개의 수인 M이 주어지면 이분검색으로 M이 정렬된 상태에서 몇 번째에 있는지
  */
 
 int main(){
     
-    int n;
-    cin >> n;
+    int n, m;
+    cin >> n >> m;
+    vector<int> vt(n);
     
-    int n1=1, n2;
-    int tmp = n;
-    int cnt = 0;
-    
-    n2 = 1;
-    tmp -= n1;
-    while(tmp>0){
-        n2++;
-        tmp -= n2;
-        if( tmp % n2 == 0){
-            cnt ++;
-            for(int i=n1; i<n2; i++){
-                cout << (i + (tmp/n2))<< " + ";
-            }
-             cout << (n2 + (tmp/n2)) << " = " << n << '\n';
-        }
-       
+    for(int i=0; i<n; i++){
+        cin >> vt[i];
     }
-    cout << cnt;
+    
+    int lt=0, rt = n-1;
+    int mid = 0;
+    sort(vt.begin(), vt.end());
+    
+    while(lt <= rt){
+        
+        mid = (lt + rt)/2;
+        
+        if(vt[mid] == m){
+            cout << mid + 1;
+            break;
+            
+        }else if(vt[mid] < m){
+            lt = mid + 1;
+        }
+        else{
+            rt = mid -1;
+        }
+    }
     
     
     return 0;
