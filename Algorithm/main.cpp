@@ -10,29 +10,33 @@ using namespace std;
  4+5+6=15
  1+2+3+4+5=15
  와 같이 총 3가지의 경우가 존재한다.
+
  */
 
 int main(){
     
-    int n, i;
-    int num= 1;
-    int tmp;
+    int n;
     cin >> n;
     
-    tmp = n;
-    n --;
-    while(n>0){
-        num++;
-        n = n - num;
-        
-        if( n% num ==0){
-            
-            for(i = 1; i<num; i++){
-                cout << (n / num) + i  << " + " ;
+    int n1=1, n2;
+    int tmp = n;
+    int cnt = 0;
+    
+    n2 = 1;
+    tmp -= n1;
+    while(tmp>0){
+        n2++;
+        tmp -= n2;
+        if( tmp % n2 == 0){
+            cnt ++;
+            for(int i=n1; i<n2; i++){
+                cout << (i + (tmp/n2))<< " + ";
             }
-            cout << (n/num) + i << " = " << tmp << '\n';
+             cout << (n2 + (tmp/n2)) << " = " << n << '\n';
         }
+       
     }
+    cout << cnt;
     
     
     return 0;
