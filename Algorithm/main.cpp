@@ -6,66 +6,58 @@ using namespace std;
 
 /*
  
- N개의 마구간이 1차원 수직선상에 있습니다. 각 마구간은 x1, x2, x3, ......, xN의 좌표를 가 지며, 마구간간에 좌표가 중복되는 일은 없습니다.
- 현수는 C마리의 말을 가지고 있는데, 이 말들은 서로 가까이 있는 것을 좋아하지 않습니다. 각 마구간에는 한 마리의 말만 넣을 수 있고, 가장 가까운 두 말의 거리가 최대가 되게 말을 마구간에 배치하고 싶습니다.
- C마리의 말을 N개의 마구간에 배치했을 때 가장 가까운 두 말의 거리가 최대가 되는 그 최대 값을 출력하는 프로그램을 작성하세요.
+ 1) 컴퓨터는 1번 작업부터 순서대로 1초씩 작업을 한다. 즉 각 작업을 1초만 작업하고 다음 작업을 하는 식이다.
+ 2) 마지막 번호의 작업을 1초 했으면 다시 1번 작업으로 가서 다시 1초씩 후속 처리를 한다. 3) 처리가 끝난 작업은 작업 스케쥴에서 사라지고 새로운 작업은 들어오지 않는다.
+ 그런데 현수의 컴퓨터가 일을 시작한 지 K초 후에 정전이 되어 컴퓨터가 일시적으로 멈추었 다. 전기가 들어오고 나서 현수의 컴퓨터가 몇 번 작업부터 다시 시작해야 하는지 알아내는 프로그램을 작성하세요.
+ 첫 번째 줄에 몇 번 작업부터 다시 시작해야 하는지 작업 번호를 출력한다. 만약 더 이상 처리할 작업이 없다면 -1를 출력한다.
+ 
  */
-
-int n;
-vector<int> vt;
-
-int isPossible(int num){
-
-    int cnt =1;
-    int position = vt[0];
-    
-    // 두번쨰 좌표부터 검증
-    for(int i=1; i<n; i++){
-        
-        if(vt[i] - position >= num ){
-            cnt++;
-            position = vt[i];
-        }
-    }
-    
-    return cnt;
-}
-
 
 int main(){
     
-    int  c;
-    int num;
+    int n,k, sum = 0;
+    cin >> n;
     
-    cin >> n >> c;
-
-    for(int i=0; i<n; i++){
-        cin >> num;
-        vt.push_back(num);
+    int arr[n+1];
+    for(int i=1; i<=n; i++){
+        cin >> arr[i];
+        sum += arr[i];
     }
     
-    sort(vt.begin(), vt.end());
+    cin >> k;
     
-    int lt = 0, rt = vt.size() -1;
-    int mid  = 0;
-    int max = 0;
-    int result = 0;
+    if(k > sum){
+        cout << -1 ;
+        return 0;
+    }
     
-    while(lt<= rt){
+    int time = 0;
+    int pos = 0;
+    while(1){
         
-        mid = (lt + rt)/2;
+        pos ++;
+        if(pos>n) pos =1;
         
-        if(isPossible(mid) >= c){
-            result =  mid;
-            lt = mid + 1;
-        }
-        else{
-            rt = mid -1;
+        if(arr[pos] == 0) continue;
+        
+        arr[pos]--;
+        time++;
+        
+        if(time == k){
+            break;
         }
     }
     
-    cout << result;
+    while(1){
+        
+        pos ++;
+        if(pos>n) pos =1;
+        
+        if(arr[pos] != 0) break;
+        
+    }
+    cout <<  pos ;
+    
     
     return 0;
-    
 }
