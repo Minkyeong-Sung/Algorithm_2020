@@ -4,59 +4,58 @@
 
 using namespace std;
 
+int dx[4] = {-1, 1, 0, 0};
+int dy[4] = {0, 0, -1, 1};
+
 /*
+ 지도 정보가 N*N 격자판에 주어집니다. 각 격자에는 그 지역의 높이가 쓰여있습니다. 각 격자 판의 숫자 중 자신의 상하좌우 숫자보다 큰 숫자는 봉우리 지역입니다. 봉우리 지역이 몇개 있는 지 알아내는 프로그램을 작성하세요.
+ 격자의 가장자리는 0으로 초기화 되었다고 가정한다.
  
- 1) 컴퓨터는 1번 작업부터 순서대로 1초씩 작업을 한다. 즉 각 작업을 1초만 작업하고 다음 작업을 하는 식이다.
- 2) 마지막 번호의 작업을 1초 했으면 다시 1번 작업으로 가서 다시 1초씩 후속 처리를 한다. 3) 처리가 끝난 작업은 작업 스케쥴에서 사라지고 새로운 작업은 들어오지 않는다.
- 그런데 현수의 컴퓨터가 일을 시작한 지 K초 후에 정전이 되어 컴퓨터가 일시적으로 멈추었 다. 전기가 들어오고 나서 현수의 컴퓨터가 몇 번 작업부터 다시 시작해야 하는지 알아내는 프로그램을 작성하세요.
- 첫 번째 줄에 몇 번 작업부터 다시 시작해야 하는지 작업 번호를 출력한다. 만약 더 이상 처리할 작업이 없다면 -1를 출력한다.
+ 
  
  */
-
 int main(){
     
-    int n,k, sum = 0;
+    int n;
+    int arr[50][50];
+    
     cin >> n;
     
-    int arr[n+1];
-    for(int i=1; i<=n; i++){
-        cin >> arr[i];
-        sum += arr[i];
-    }
-    
-    cin >> k;
-    
-    if(k > sum){
-        cout << -1 ;
-        return 0;
-    }
-    
-    int time = 0;
-    int pos = 0;
-    while(1){
-        
-        pos ++;
-        if(pos>n) pos =1;
-        
-        if(arr[pos] == 0) continue;
-        
-        arr[pos]--;
-        time++;
-        
-        if(time == k){
-            break;
+    for(int i=0; i<n; i++){
+        for(int j=0; j<n; j++){
+            cin >> arr[i][j];
         }
     }
     
-    while(1){
-        
-        pos ++;
-        if(pos>n) pos =1;
-        
-        if(arr[pos] != 0) break;
-        
+    int result = 0;
+    
+    for(int i=0; i<n; i++){
+        for(int j=0; j<n; j++){
+            
+            int flag = 1;
+            
+            // 동서남북으로 탐색 시작
+            for(int d = 0; d<4; d++){
+                
+                int nx = i + dx[d];
+                int ny = j + dy[d];
+                
+                if( nx >= 0 && nx < n && ny >= 0 && ny< n ){
+                    
+                    if(arr[i][j] <  arr[nx][ny]){
+                        flag = 0;
+                        break;
+                    }
+                }
+            }
+            
+            if(flag == 1){
+                result ++;
+            }
+        }
     }
-    cout <<  pos ;
+    
+    cout << result;
     
     
     return 0;
