@@ -4,33 +4,38 @@
 
 using namespace std;
 /*
- 10진수 N이 입력되면 K진수로 변환하여 출력하는 프로그램을 작성하세요
+ 괄호가 입력되면 올바른 괄호이면 “YES", 올바르지 않으면 ”NO"를 출력합니다.
+ (())() 이것은 괄호의 쌍이 올바르게 위치하는 거지만, (()()))은 올바른 괄호가 아니다.
+
  */
 
-int st[100];
-int top = -1;
-
-void push(int num){
-    st[++top] = num;
-}
-
-int pop(){
-    return st[top--];
-}
-
 int main(){
-    int n, k;
     
-    cin >> n >> k;
-    char arr[16] = {'0', '1', '2', '3', '4', '5', '6' , '7', '8', '9' , 'A', 'B', 'C', 'D', 'E', 'F' };
+    string str;
     
-    while(n >0){
-        push(n%k);
-        n/= k;
+    cin >> str;
+    
+    int sum = 0;
+    for(int i=0; i<str.size(); i++){
+        
+        if(str[i] == '('){
+            sum ++;
+        }
+        else{
+            sum --;
+        }
+        
+        if(sum < 0){
+            cout << "NO";
+            return 0;
+        }
     }
     
-    while(top != -1){
-        cout << arr[pop()];
+    if(sum == 0){
+        cout << "YES";
+    }
+    else{
+        cout << "NO";
     }
     
     return 0;
