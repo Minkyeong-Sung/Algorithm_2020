@@ -3,45 +3,48 @@
 
 using namespace std;
 
-int arr[21][21];
-int visit[21]; //
-int n, cnt = 0;
+int map[8][8];
+int visit[8][8];
+int cnt = 0;
 
-void DFS(int num){
+int dx[4] = {-1, 1, 0, 0};
+int dy[4] = {0, 0, -1, 1};
+
+void DFS(int x, int y){
     
-    if(num == n){
-        cnt ++;
+    if(x == 7 && y == 7){
+        cnt++;
     }
     else{
-        for(int i=1; i<= n; i++){
-            if(arr[num][i] == 1 && visit[i] == 0){
-                // 방문 표시
-                visit[i] = 1;
-                DFS(i);
-                // 다시 방문 해제
-                visit[i] = 0;
-                
+        
+        for(int d=0; d<4; d++){
+            int tx = x + dx[d];
+            int ty = y + dy[d];
+            
+            if(tx < 1  || tx > 7 || ty < 1 || ty > 7) continue;;
+            
+            if(visit[tx][ty] == 0 && map[tx][ty] == 0){
+                visit[tx][ty] = 1;
+                DFS(tx, ty);
+                visit[tx][ty] = 0;
             }
         }
-         
+        
         
     }
+    
 }
 
 int main(){
-    int m, x, y;
-    cin >> n >> m;
     
-    memset(arr, 0, sizeof(arr));
-    
-    for(int i=1; i<=m; i++){
-        cin >> x >> y;
-        arr[x][y] = 1;
+    for(int i=1; i<= 7; i++){
+        for(int j=1; j<= 7; j++){
+            cin >> map[i][j];
+        }
     }
     
-    visit[1] = 1;
-          
-    DFS(1);
+    visit[1][1] = 1;
+    DFS(1,1);
     
     cout << cnt;
     
