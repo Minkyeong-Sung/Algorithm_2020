@@ -1,50 +1,51 @@
 #include <iostream>
 #include <algorithm>
+#include <queue>
+#include <vector>
 
 using namespace std;
 
-int map[8][8];
-int visit[8][8];
-int cnt = 0;
+int visit[21];
+vector<int> vt[21];
+int n, cnt = 0;
 
-int dx[4] = {-1, 1, 0, 0};
-int dy[4] = {0, 0, -1, 1};
-
-void DFS(int x, int y){
+void DFS(int num){
     
-    if(x == 7 && y == 7){
+    if(num == n){
         cnt++;
     }
     else{
         
-        for(int d=0; d<4; d++){
-            int tx = x + dx[d];
-            int ty = y + dy[d];
+        for(int i=0; i<vt[num].size(); i++){
             
-            if(tx < 1  || tx > 7 || ty < 1 || ty > 7) continue;;
-            
-            if(visit[tx][ty] == 0 && map[tx][ty] == 0){
-                visit[tx][ty] = 1;
-                DFS(tx, ty);
-                visit[tx][ty] = 0;
+            // 갔던 곳인지 검사
+            if(visit[vt[num][i]] == 0){
+                // visit
+                visit[vt[num][i]] = 1;
+                // v와 연결된 노드 번호를 넘겨준다. 
+                DFS(vt[num][i]);
+                // 방문 해제
+                visit[vt[num][i]] = 0;
             }
         }
-        
-        
     }
     
 }
 
+
 int main(){
     
-    for(int i=1; i<= 7; i++){
-        for(int j=1; j<= 7; j++){
-            cin >> map[i][j];
-        }
+    int m;
+    int v, u;
+    cin >> n >> m;
+    
+    for(int i=0; i<m; i++){
+        cin >> v >> u;
+        vt[v].push_back(u);
     }
     
-    visit[1][1] = 1;
-    DFS(1,1);
+    visit[1] = 1;
+    DFS(1);
     
     cout << cnt;
     
