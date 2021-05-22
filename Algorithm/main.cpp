@@ -1,53 +1,56 @@
 #include <iostream>
 #include <algorithm>
-#include <queue>
 #include <vector>
+#include <queue>
 
 using namespace std;
 
-int visit[21];
-vector<int> vt[21];
-int n, cnt = 0;
-
-void DFS(int num){
-    
-    if(num == n){
-        cnt++;
-    }
-    else{
-        
-        for(int i=0; i<vt[num].size(); i++){
-            
-            // 갔던 곳인지 검사
-            if(visit[vt[num][i]] == 0){
-                // visit
-                visit[vt[num][i]] = 1;
-                // v와 연결된 노드 번호를 넘겨준다. 
-                DFS(vt[num][i]);
-                // 방문 해제
-                visit[vt[num][i]] = 0;
-            }
-        }
-    }
-    
-}
-
-
 int main(){
     
-    int m;
-    int v, u;
+    int n, m, v, u;
+    
     cin >> n >> m;
+    
+    vector<int> vt[21];
+    queue<int> q;
+    int visit[21];
+    int dist[21];
     
     for(int i=0; i<m; i++){
         cin >> v >> u;
         vt[v].push_back(u);
+        
+        // init
+        dist[i] = 0;
+        visit[i] = 0;
     }
     
+    q.push(1);
     visit[1] = 1;
-    DFS(1);
     
-    cout << cnt;
+    while(!q.empty()){
+        
+        int next = q.front();
+        q.pop();
+        
+        for(int i=0; i< vt[next].size(); i++){
+            
+            if(visit[vt[next][i]] == 0){
+                
+                visit[vt[next][i]] = 1;
+                q.push(vt[next][i]);
+                
+                // 다음 좌표까지 가는 최소 간선의 수
+                // 현재까지 온 간선 수 + 1 이 최소 간선의 길이 
+                dist[vt[next][i]] = dist[next] + 1;
+            }
+        }
+    }
+    
+    for(int i=2; i<= n; i++){
+        cout << i << " : " << dist[i] << '\n';
+    }
+    
     
     return 0;
 }
