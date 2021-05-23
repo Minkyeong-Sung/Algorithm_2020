@@ -17,7 +17,7 @@ struct Node{
         val = b;
     };
     
-    // 가중치 기준으로 오름차순 (최소 힙)
+    // 가중치 기준으로 내림차순 (최소 힙)
     bool operator<(const Node &b)const{
         return val > b.val;
     }
