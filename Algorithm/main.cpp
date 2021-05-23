@@ -6,52 +6,22 @@
 
 using namespace std;
 
-// 날짜 기준으로 내림차순 
-bool compare(pair<int, int> a, pair<int, int> b){
-    return a.second > b.second;
+int DFS(int n, int r){
+    
+    if( n == r || r == 0){
+        return 1;
+    }
+    else{
+        // n-1 개중 r-1 만큼만 뽑겠다 , n-1개중 r 만큼 모두(내가 참여하지 않는 경우) 뽑겠다
+        return  DFS(n-1, r-1) + DFS(n-1, r);
+    }
 }
 
 int main(){
+    int n, m;
+    cin >> n >> m;
+    cout << DFS(n, m);
     
-    int n,d, m, max = -2147000000;
-    vector<pair<int, int>> vt;
-    priority_queue<int> pQ;
-    
-    // input
-    cin >> n;
-    for(int i=0; i<n; i++){
-        cin >> m >> d;
-        vt.push_back(make_pair(m, d));
-        
-        // 가장 늦은 마감 일자 찾기
-        if(max < d){
-            max = d;
-        }
-    }
-    // sort
-    sort(vt.begin(), vt.end(), compare);
-    
-    // solve
-    // 가장 늦은 날부터 가점 +
-    int j = 0;
-    int result = 0;
-    for(int i=max; i>= 1; i--){
-        for( ; j< n; j++){
-            
-            // 지금 날짜보다 적은 날짜는 카운트 하지 않겠다.
-            if( vt[j].second < i) break;
-            
-            // 가능한 모든 돈 넣기
-            pQ.push(vt[j].first);
-        }
-        
-        if(!pQ.empty()){
-            result += pQ.top();
-            pQ.pop();
-        }
-    }
-    
-    cout << result;
     
     return 0;
 }
