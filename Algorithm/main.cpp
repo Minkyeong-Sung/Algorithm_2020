@@ -2,77 +2,70 @@
 #include <algorithm>
 #include <queue>
 #include <vector>
-#include <string>
 
 using namespace std;
 
-struct Road{
-    int s;
-    int e;
-    int price;
+int visit[30];
+
+struct Node{
+  
+    int n;
+    int val;
+    
+    Node(int a, int b){
+        n = a;
+        val = b;
+    };
+    
+    // 가중치 기준으로 오름차순 (최소 힙)
+    bool operator<(const Node &b)const{
+        return val > b.val;
+    }
+    
 };
 
-bool compare(Road &a, Road &b){
-    return a.price < b.price;
-}
-
-int unf[10001];
-
-//메모이제이션 활용 & 해당 배열 찾기
-int Find(int n){
-    if(unf[n] == n){
-        return  n;
-    }
-    else{
-        return unf[n] = Find(unf[n]);
-    }
-}
-// 찾은 후, 합치기
-void Union(int a, int b){
-    
-    a = Find(a);
-    b = Find(b);
-    
-    // 합치기
-    if(a != b){
-        unf[a] = b;
-    }
-}
-
 int main(){
-    int n, m;
     
-    vector<Road> vt;
-    Road r;
-    
-    cin >> n >> m;
-    
-    for(int i=1; i<= n; i++){
-        unf[i] = i;
-    }
-    // 구조체 형식으로 벡터에 저장  (가중치 값을 기준으로 넣음)
-    for(int i=0; i<m; i++){
-        cin >> r.s >> r.e >> r.price;
-        vt.push_back(r);
-    }
-   
-    sort(vt.begin(), vt.end(), compare );
-    
-    int a, b;
+    int v, e, a, b, c;
     int result = 0;
-    for(int i=0; i<m; i++){
-        // 간선을 먼저 선택한다.
-        a = Find(vt[i].s);
-        b = Find(vt[i].e);
+    
+    vector<pair<int, int>> vt[30];
+    priority_queue<Node> q;
+    
+    // input
+    cin >> v >> e;
+    
+    for(int i=0; i<e; i++){
+        cin >> a >> b >> c;
+        vt[a].push_back(make_pair(b, c));
+        vt[b].push_back(make_pair(a, c));
+    }
+    
+    // 시작 위치 설정
+    q.push( Node(1, 0));
+    while(!q.empty()){
         
-        // 서로 다른 집합이라면, 값을 누적하고 union 한다.
-        // 가중치를 최소 값을 구하지 않은 이유는 사전에 오름차순으로 정렬했기때문 .
-        if( a != b){
-            result += vt[i].price;
-            Union(vt[i].s, vt[i].e);
+        Node tmp = q.top();
+        q.pop();
+        
+        // 다음 위치 탐색
+        int v = tmp.n;
+        int val = tmp.val;
+        
+        // 방문하지 않은 노드인 경우
+        if(visit[v] == 0){
+            
+            result += val;
+            visit[v] = 1;
+            
+            // 그 노드와 연결된 정보 저장
+            for(int i=0; i< vt[v].size(); i++){
+                q.push( Node(vt[v][i].first, vt[v][i].second));
+            }
         }
     }
     
+    cout << result;
     
     return 0;
 }
